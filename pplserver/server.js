@@ -1,6 +1,6 @@
 // Import required modules.
 var express = require('express');
-var stormpath = require('express-stormpath');
+// var stormpath = require('express-stormpath');
 var mongoose = require("mongoose");
 
 mongoose.connect('mongodb://localhost/ppl')
@@ -15,7 +15,7 @@ var AuthorSchema = {
 var VenueSchema = {
 	name:String,
 	publisher:String,
-	day:Number
+	day:Number,
 	month:Number,
 	year:Number
 }
@@ -32,7 +32,7 @@ var UserSchema = {
 	email:String
 }
 
-var ReviewSchema = s{
+var ReviewSchema = {
 	paper_id:Number,
 	user:UserSchema,
 	summary:String
@@ -45,15 +45,15 @@ var Review = mongoose.model('Review', ReviewSchema, 'reviews');
 var app = express();
 
 // Configure Stormpath.
-var stormpathMiddleware = stormpath.init(app, {
-  apiKeyFile: '/Users/caw/.stormpath/apiKey.properties',
-  application: 'https://api.stormpath.com/v1/applications/3ow3opGnLNWjwhTYQwd014',
-  secretKey: 'RANDOMTHINGMKAYOKAY',
-  expandCustomData: true,
-  enableForgotPassword: true
-});
+// var stormpathMiddleware = stormpath.init(app, {
+//   apiKeyFile: '/Users/caw/.stormpath/apiKey.properties',
+//   application: 'https://api.stormpath.com/v1/applications/3ow3opGnLNWjwhTYQwd014',
+//   secretKey: 'RANDOMTHINGMKAYOKAY',
+//   expandCustomData: true,
+//   enableForgotPassword: true
+// });
 
-app.use(stormpathMiddleware);
+// app.use(stormpathMiddleware);
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -62,9 +62,22 @@ app.use(function(req, res, next) {
 });
 
 // Handle routes here
+var baseURI = "/v1/"
 
 // Generate a simple home page.
 app.get('/', function(req, res) {
-  res.redirect(qotdURI);
+  res.redirect(baseURI);
 });
 
+app.get(baseURI, function(req, res) {
+	console.log("Welcome home.");
+	res.json({msg: "Welcome home."});
+});
+
+var server = app.listen(3000, function () {
+
+  var host = server.address().address;
+  var port = server.address().port;
+
+  console.log('Example app listening at http://%s:%s', host, port);
+});

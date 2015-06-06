@@ -38,8 +38,8 @@ var ReviewSchema = {
 	summary:String
 }
 
-var Paper = mongoose.model('Paper', PaperSchema, 'papers');
-var Review = mongoose.model('Review', ReviewSchema, 'reviews');
+var Papers = mongoose.model('Papers', PaperSchema, 'papers');
+var Reviews = mongoose.model('Reviews', ReviewSchema, 'reviews');
 
 // Initialize our Express app.
 var app = express();
@@ -62,7 +62,11 @@ app.use(function(req, res, next) {
 });
 
 // Handle routes here
-var baseURI = "/v1/"
+var baseURI = "/v1/";
+var papersURI = baseURI + "papers/";
+var reviewsURI = papersURI + "reviews/";
+var authorsURI = baseURI + "authors/";
+var venuesURI = baseURI + "venues/";
 
 // Generate a simple home page.
 app.get('/', function(req, res) {
@@ -70,14 +74,26 @@ app.get('/', function(req, res) {
 });
 
 app.get(baseURI, function(req, res) {
-	console.log("Welcome home.");
-	res.json({msg: "Welcome home."});
+	console.log("Welcome home...");
+	res.json({msg: "Welcome home..."});
+});
+
+app.get(papersURI, function(req, res) {
+	console.log("Getting papers...");
+
+	Papers.find({}, function(err, papers) {
+		var paperMap = {};
+
+		papers.forEach(function(paper) {
+			paperMap[paper._id] = paper;
+		});
+
+		res.json(paperMap);
+	});
 });
 
 var server = app.listen(3000, function () {
-
-  var host = server.address().address;
-  var port = server.address().port;
-
-  console.log('Example app listening at http://%s:%s', host, port);
+	var host = server.address().address;
+	var port = server.address().port;
+	console.log('Example app listening at http://%s:%s', host, port);
 });

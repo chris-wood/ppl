@@ -92,6 +92,20 @@ app.get(papersURI, function(req, res) {
 	});
 });
 
+app.get(reviewsURI, function(req, res) {
+	console.log("Getting reviews...");
+
+	Reviews.find({}, function(err, reviews) {
+		var reviewMap = {};
+
+		reviews.forEach(function(review) {
+			reviewMap[review._id] = review;
+		});
+
+		res.json(reviewMap);
+	});
+});
+
 var server = app.listen(3000, function () {
 	var host = server.address().address;
 	var port = server.address().port;
